@@ -1,13 +1,39 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face {
+  font-family: JetbrainsMono;
+  src: url("./static/font/JetBrainsMono-Regular.woff") format("woff");
+  size: 400;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@font-face {
+  font-family: JetbrainsMonoMedium;
+  src: url("./static/font/JetBrainsMono-Medium.woff") format("woff");
+  size: 500;
+}
+
+@font-face {
+  font-family: JetbrainsMonoItalic;
+  src: url("./static/font/JetBrainsMono-Italic.woff") format("woff");
+  size: 400;
+}
+
+@font-face {
+  font-family: JetbrainsMonoBold;
+  src: url("./static/font/JetBrainsMono-Bold.woff") format("woff");
+  size: 400;
+}
+
+body {
+  line-height: 1;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font-family: JetbrainsMono, JetbrainsMonoMedium, JetbrainsMonoItalic,
+    JetbrainsMonoBold, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
 }
