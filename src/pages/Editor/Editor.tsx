@@ -26,13 +26,13 @@ const half = css`
 export default function Editor() {
 	const editablePart = useRef<HTMLTextAreaElement>(null);
 	const showPart = useRef<HTMLDivElement>(null);
-	const history = useHistory()
+	const history = useHistory();
 
 	useEffect(() => {
-		if (localStorage.getItem("token") === null) {
-			history.push("/login")		
+		if (localStorage.getItem('token') === null) {
+			history.push('/login');
 		}
-	})
+	});
 
 	const editing = () => {
 		if (showPart.current !== null && editablePart.current !== null) {

@@ -11,10 +11,10 @@ export default function LogIn() {
 	const [password, setPassword] = useState('');
 
 	useEffect(() => {
-		if (localStorage.getItem("token") !== null) {
-			history.push("/editor")
+		if (localStorage.getItem('token') !== null) {
+			history.push('/editor');
 		}
-	})
+	});
 
 	const login = (e: any) => {
 		e.preventDefault();
