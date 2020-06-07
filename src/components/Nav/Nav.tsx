@@ -1,12 +1,11 @@
 /** @jsx jsx */
-import {jsx } from '@emotion/core';
+import { jsx } from '@emotion/core';
 import NavigationBar from './NavigationBar';
 import { NavItemInfo } from './NavItem';
 
 export default function Nav() {
 	const navItemList: Array<NavItemInfo> = [
 		{ title: 'Log In', target: '/login' },
-		{ title: 'sohu', target: '/other' },
 		{ title: 'editor', target: '/editor' },
 	];
 

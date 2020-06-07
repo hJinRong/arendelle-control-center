@@ -1,8 +1,9 @@
 /** @jsx jsx */
 import { jsx, css } from '@emotion/core';
 import marked from 'marked';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import Nav from '../../components/Nav/Nav';
+import { useHistory } from 'react-router-dom';
 
 const editorCon = css`
 	position: absolute;
@@ -25,6 +26,13 @@ const half = css`
 export default function Editor() {
 	const editablePart = useRef<HTMLTextAreaElement>(null);
 	const showPart = useRef<HTMLDivElement>(null);
+	const history = useHistory()
+
+	useEffect(() => {
+		if (localStorage.getItem("token") === null) {
+			history.push("/login")		
+		}
+	})
 
 	const editing = () => {
 		if (showPart.current !== null && editablePart.current !== null) {
