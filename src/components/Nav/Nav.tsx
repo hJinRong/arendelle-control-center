@@ -6,7 +6,8 @@ import { NavItemInfo } from './NavItem';
 export default function Nav() {
 	const navItemList: Array<NavItemInfo> = [
 		{ title: 'Log In', target: '/login' },
-		{ title: 'editor', target: '/editor' },
+		{ title: 'Control panel', target: '/control-panel' },
+		{ title: 'Editor', target: '/editor' },
 	];
 
 	return (
