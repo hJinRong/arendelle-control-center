@@ -14,21 +14,21 @@ export default function Article(props: ArticleInfo) {
 
 	const toggleVisibility = () => {
 		axios
-			.post(
-				`http://localhost:8080/vi/${props.aid}`,
-				{},
-				{
-					params: {
-						vi: !visibility,
-					},
-				}
-			)
+			.get(`http://localhost:8080/api/vi/${props.aid}`, {
+				params: {
+					vi: !visibility,
+				},
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+					Accept: 'plain/text',
+				},
+			})
 			.then(function (response) {
-				if (response.data.res === 'DONE') {
+				if (response.data === 'DONE') {
 					setVisibility(!visibility);
 				}
 			})
-			.then(function (error) {
+			.catch(function (error) {
 				throw error;
 			});
 	};

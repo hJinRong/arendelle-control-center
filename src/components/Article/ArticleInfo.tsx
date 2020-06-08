@@ -1,6 +1,6 @@
 export default interface ArticleInfo {
-  aid: String
-  title: String;
-  date: String;
-  vi: boolean;
+	aid: String;
+	title: String;
+	date: String;
+	vi: boolean;
 }

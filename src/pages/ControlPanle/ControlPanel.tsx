@@ -11,18 +11,25 @@ export default function ControlPanel() {
 
 	useEffect(() => {
 		if (articles === tmp) {
-			Axios.get('http://localhost:8080/api/my-articles').then(function (
-				response
-			) {
-				setArticles(response.data);
-			});
+			Axios.get('http://localhost:8080/api/my-articles', {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+					Accept: 'application/json',
+				},
+			})
+				.then(function (response) {
+					setArticles(response.data);
+				})
+				.catch(function (error) {
+					throw error;
+				});
 		}
 	});
 
 	return (
 		<>
 			{articles.map((i) => (
-				<Article {...i} />
+				<Article key={i.aid.toString()} {...i} />
 			))}
 		</>
 	);

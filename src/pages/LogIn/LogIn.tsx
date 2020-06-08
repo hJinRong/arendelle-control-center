@@ -21,7 +21,7 @@ export default function LogIn() {
 		e.target.blur();
 		axios
 			.post(
-				'http://localhost:8080/auth',
+				'http://localhost:8080/api/auth',
 				{},
 				{
 					params: {
