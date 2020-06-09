@@ -11,6 +11,10 @@ export default function LogIn() {
 	const [password, setPassword] = useState('');
 
 	useEffect(() => {
+		document.title = 'Log in';
+	});
+
+	useEffect(() => {
 		if (localStorage.getItem('token') !== null) {
 			history.push('/control-panel');
 		}

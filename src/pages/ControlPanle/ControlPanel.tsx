@@ -10,6 +10,10 @@ export default function ControlPanel() {
 	const [articles, setArticles] = useState(tmp);
 
 	useEffect(() => {
+		document.title = 'Arendelle control center';
+	});
+
+	useEffect(() => {
 		if (articles === tmp) {
 			Axios.get('http://localhost:8080/api/my-articles', {
 				headers: {

@@ -50,6 +50,11 @@ export default function Editor() {
 	const [blocking, setBlocking] = useState(false);
 	const [title, setTitle] = useState('');
 	const [content, setContent] = useState('');
+
+	useEffect(() => {
+		document.title = 'Editor';
+	});
+
 	useEffect(() => {
 		if (localStorage.getItem('token') === null) {
 			history.push('/login');
