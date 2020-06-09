@@ -12,7 +12,7 @@ export default function LogIn() {
 
 	useEffect(() => {
 		if (localStorage.getItem('token') !== null) {
-			history.push('/editor');
+			history.push('/control-panel');
 		}
 	});
 

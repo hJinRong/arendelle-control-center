@@ -11,7 +11,7 @@ export default function Routes() {
 		<App>
 			<Switch>
 				<Route path="/login" children={<LogInPage />} />
-				<Route path="/editor" children={<EditorPage />} />
+				<Route path="/editor/:aid" children={<EditorPage />} />
 				<Route path="/control-panel" children={<ControlPanelPage />} />
 				<Route sensitive exact strict path="/" children={<IndexPage />} />
 			</Switch>

@@ -69,7 +69,7 @@ export default function Index() {
 		return function () {
 			window.removeEventListener('scroll', scrollHandler, false);
 		};
-	});
+	}, []);
 
 	return (
 		<div>
