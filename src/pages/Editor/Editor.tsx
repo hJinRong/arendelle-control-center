@@ -2,12 +2,13 @@
 import { jsx, css } from '@emotion/core';
 import marked from 'marked';
 import { useRef, useEffect, useState } from 'react';
-import Nav from '../../components/Nav/Nav';
 import { useHistory, useParams, Prompt } from 'react-router-dom';
 import axios from 'axios';
 import './Editor.css';
 import Save from './save.svg';
 import Download from './download.svg';
+import Home from './home.svg';
+import keyboardJS from 'keyboardjs';
 
 const iconCon = css`
 	position: absolute;
@@ -40,6 +41,7 @@ const half = css`
 	height: 100%;
 	width: 50%;
 	float: left;
+	padding: 60px 50px 0;
 `;
 
 export default function Editor() {
@@ -52,7 +54,24 @@ export default function Editor() {
 	const [content, setContent] = useState('');
 
 	useEffect(() => {
-		document.title = 'Editor';
+		keyboardJS.bind('tab', (e) => {
+			if (editablePart.current) {
+				editablePart.current.focus();
+				let startPos = editablePart.current.selectionStart;
+				const front = editablePart.current.value.substring(0, startPos);
+				const back = editablePart.current.value.substring(
+					startPos,
+					editablePart.current.value.length
+				);
+				editablePart.current.value = front + '\t' + back;
+				editablePart.current.focus();
+				editablePart.current.selectionStart = editablePart.current.value.length;
+			}
+		});
+	}, []);
+
+	useEffect(() => {
+		document.title = title;
 	});
 
 	useEffect(() => {
@@ -77,17 +96,10 @@ export default function Editor() {
 	}, [aid, history]);
 
 	useEffect(() => {
-		if (showPart.current && editablePart.current) {
-			showPart.current.innerHTML = marked(editablePart.current.value);
+		if (showPart.current) {
+			showPart.current.innerHTML = marked(content);
 		}
 	}, [content]);
-
-	const editing = () => {
-		setBlocking(true);
-		if (editablePart.current) {
-			setContent(editablePart.current.value);
-		}
-	};
 
 	const saveAll = () => {
 		axios
@@ -134,7 +146,24 @@ export default function Editor() {
 
 	return (
 		<div>
-			<Nav />
+			<input
+				type="text"
+				name="title"
+				value={title}
+				onChange={(e) => {
+					setBlocking(true);
+					setTitle(e.target.value);
+				}}
+				css={css`
+					width: 100%;
+					height: 45px;
+					border: solid 1px black;
+					padding: 0 0.3em;
+					font-size: 28px;
+					position: absolute;
+					z-index: 100;
+				`}
+			/>
 			<Prompt
 				when={blocking}
 				message={(location) =>
@@ -153,23 +182,29 @@ export default function Editor() {
 				>
 					<img src={Save} alt="save" onClick={saveAll} />
 					<img src={Download} alt="download" onClick={downloadToLocal} />
+					<img
+						src={Home}
+						alt="home"
+						onClick={() => history.push('/control-panel')}
+					/>
 				</div>
 				<textarea
-					id="textarea"
 					ref={editablePart}
 					css={css`
 						${half}
-						padding: 50px;
 						resize: none;
 						font-size: larger;
 					`}
-					onChange={editing}
+					onChange={(e) => {
+						setBlocking(true);
+						setContent(e.target.value);
+					}}
 					value={content}
 				></textarea>
 				<div
 					css={css`
 						${half}
-						padding: 50px;
+						border-left: dotted 1px gray;
 					`}
 					ref={showPart}
 				></div>
