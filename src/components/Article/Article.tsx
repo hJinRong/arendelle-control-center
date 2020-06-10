@@ -4,6 +4,7 @@ import Tea from './tea.jpg';
 import Visibility from './visibility.svg';
 import VisibilityOff from './visibility-off.svg';
 import Modify from './modify.svg';
+import Delete from './delete.svg';
 import { useHistory, Link } from 'react-router-dom';
 import ArticleInfo from './ArticleInfo';
 import axios from 'axios';
@@ -35,6 +36,23 @@ export default function Article(props: ArticleInfo) {
 
 	const modify = () => history.push(`/editor/${props.aid}`);
 
+	const deleteArticle = () => {
+		axios
+			.get(`http://localhost:8080/api/delete-article/${props.aid}`, {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				},
+			})
+			.then(function (response) {
+				if (response.data === 'DONE') {
+					// history.push('/config-panel');
+				}
+			})
+			.catch(function (error) {
+				throw error;
+			});
+	};
+
 	return (
 		<div className="article-con">
 			<img className="figure" src={Tea} alt="figure"></img>
@@ -53,6 +71,9 @@ export default function Article(props: ArticleInfo) {
 					</div>
 					<div className="icon">
 						<img src={Modify} alt="modify" onClick={modify} />
+					</div>
+					<div className="icon">
+						<img src={Delete} alt="delete" onClick={deleteArticle} />
 					</div>
 				</div>
 			</div>

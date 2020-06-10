@@ -44,7 +44,11 @@ const half = css`
 	padding: 60px 50px 0;
 `;
 
-export default function Editor() {
+interface New {
+	new?: boolean;
+}
+
+export default function Editor(props: any) {
 	const editablePart = useRef<HTMLTextAreaElement>(null);
 	const showPart = useRef<HTMLDivElement>(null);
 	const history = useHistory();
@@ -77,6 +81,18 @@ export default function Editor() {
 	useEffect(() => {
 		if (localStorage.getItem('token') === null) {
 			history.push('/login');
+		} else if (history.location.state) {
+			let obj: New = history.location.state;
+			obj.new === true &&
+				axios.post(
+					`http://localhost:8080/api/new-article/${aid}`,
+					{},
+					{
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`,
+						},
+					}
+				);
 		} else {
 			axios
 				.get(`http://localhost:8080/api/get-article/${aid}`, {
@@ -86,8 +102,8 @@ export default function Editor() {
 				})
 				.then(function (response) {
 					const data = response.data;
-					setTitle(data.title);
-					setContent(data.content);
+					setTitle(data?.title);
+					setContent(data?.content);
 				})
 				.catch(function (error) {
 					throw error;
