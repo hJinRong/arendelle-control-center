@@ -8,6 +8,7 @@ import Delete from './delete.svg';
 import { useHistory, Link } from 'react-router-dom';
 import ArticleInfo from './ArticleInfo';
 import axios from 'axios';
+import { message } from 'antd';
 
 export default function Article(props: ArticleInfo) {
 	const [visibility, setVisibility] = useState(props.vi);
@@ -45,7 +46,9 @@ export default function Article(props: ArticleInfo) {
 			})
 			.then(function (response) {
 				if (response.data === 'DONE') {
-					// history.push('/config-panel');
+					message.success('Deleted');
+				} else {
+					message.error('Error occurred');
 				}
 			})
 			.catch(function (error) {

@@ -9,6 +9,7 @@ import Save from './save.svg';
 import Download from './download.svg';
 import Home from './home.svg';
 import keyboardJS from 'keyboardjs';
+import { message } from 'antd';
 
 const iconCon = css`
 	position: absolute;
@@ -136,6 +137,9 @@ export default function Editor(props: any) {
 			.then(function (response) {
 				if (response.data === 'DONE') {
 					setBlocking(false);
+					message.success('Saved');
+				} else {
+					message.error('Error occurred');
 				}
 			})
 			.catch(function (error) {
