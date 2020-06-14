@@ -51,10 +51,18 @@ export default function ControlPanel() {
 			});
 	};
 
+	const removeArticle = (aid: string) => {
+		setArticles(articles.filter((item) => item.aid !== aid));
+	};
+
 	return (
 		<>
 			{articles.map((i) => (
-				<Article key={i.aid.toString()} {...i} />
+				<Article
+					key={i.aid.toString()}
+					{...i}
+					removeArticleItem={removeArticle}
+				/>
 			))}
 			<div className="new" onClick={newArticle}>
 				<img src={Pen} alt="new" />

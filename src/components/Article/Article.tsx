@@ -9,8 +9,9 @@ import { useHistory, Link } from 'react-router-dom';
 import ArticleInfo from './ArticleInfo';
 import axios from 'axios';
 import { message } from 'antd';
+import ExternalControl from './ExternalControl';
 
-export default function Article(props: ArticleInfo) {
+export default function Article(props: ArticleInfo & ExternalControl) {
 	const [visibility, setVisibility] = useState(props.vi);
 	const history = useHistory();
 
@@ -47,6 +48,7 @@ export default function Article(props: ArticleInfo) {
 			.then(function (response) {
 				if (response.data === 'DONE') {
 					message.success('Deleted');
+					props.removeArticleItem(props.aid);
 				} else {
 					message.error('Error occurred');
 				}
