@@ -4,6 +4,7 @@ import './ControlPanel.css';
 import axios from 'axios';
 import ArticleInfo from '../../components/Article/ArticleInfo';
 import Pen from './pen.svg';
+import SignOut from './sign-out.svg';
 import { useHistory } from 'react-router-dom';
 
 export default function ControlPanel() {
@@ -11,6 +12,12 @@ export default function ControlPanel() {
 	const [articles, setArticles] = useState(tmp);
 
 	const history = useHistory();
+
+	useEffect(() => {
+		if (localStorage.getItem('token') === null) {
+			history.push('/login');
+		}
+	});
 
 	useEffect(() => {
 		document.title = 'Arendelle control center';
@@ -51,6 +58,11 @@ export default function ControlPanel() {
 			});
 	};
 
+	const signOut = () => {
+		localStorage.removeItem('token');
+		history.push('/login');
+	};
+
 	const removeArticle = (aid: string) => {
 		setArticles(articles.filter((item) => item.aid !== aid));
 	};
@@ -64,8 +76,13 @@ export default function ControlPanel() {
 					removeArticleItem={removeArticle}
 				/>
 			))}
-			<div className="new" onClick={newArticle}>
-				<img src={Pen} alt="new" />
+			<div className="ctr-btn">
+				<div className="signout" onClick={signOut}>
+					<img src={SignOut} alt="Sign out" />
+				</div>
+				<div className="new" onClick={newArticle}>
+					<img src={Pen} alt="new" />
+				</div>
 			</div>
 		</>
 	);

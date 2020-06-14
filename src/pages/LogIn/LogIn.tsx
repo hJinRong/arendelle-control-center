@@ -37,7 +37,7 @@ export default function LogIn() {
 			.then(function (response) {
 				let token = response.data.token;
 				localStorage.setItem('token', token);
-				history.push('/editor');
+				history.replace('/control-panel');
 			});
 	};
 
