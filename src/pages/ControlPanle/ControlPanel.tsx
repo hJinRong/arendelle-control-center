@@ -56,7 +56,7 @@ export default function ControlPanel() {
 			{articles.map((i) => (
 				<Article key={i.aid.toString()} {...i} />
 			))}
-			<div className="new" onClick={newArticle}>
+			<div className="icon" onClick={newArticle}>
 				<img src={Pen} alt="new" />
 			</div>
 		</>
