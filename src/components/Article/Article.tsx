@@ -17,7 +17,7 @@ export default function Article(props: ArticleInfo & ExternalControl) {
 
 	const toggleVisibility = () => {
 		axios
-			.get(`http://localhost:8080/api/vi/${props.aid}`, {
+			.get(`https://arendelle.tech/api/vi/${props.aid}`, {
 				params: {
 					vi: !visibility,
 				},
@@ -40,7 +40,7 @@ export default function Article(props: ArticleInfo & ExternalControl) {
 
 	const deleteArticle = () => {
 		axios
-			.get(`http://localhost:8080/api/delete-article/${props.aid}`, {
+			.get(`https://arendelle.tech/api/delete-article/${props.aid}`, {
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem('token')}`,
 				},

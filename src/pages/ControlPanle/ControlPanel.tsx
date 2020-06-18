@@ -26,7 +26,7 @@ export default function ControlPanel() {
 	useEffect(() => {
 		if (articles === tmp) {
 			axios
-				.get('http://localhost:8080/api/my-articles', {
+				.get('https://arendelle.tech/api/my-articles', {
 					headers: {
 						Authorization: `Bearer ${localStorage.getItem('token')}`,
 						Accept: 'application/json',
@@ -43,7 +43,7 @@ export default function ControlPanel() {
 
 	const newArticle = () => {
 		axios
-			.get('http://localhost:8080/api/request-new-aid')
+			.get('https://arendelle.tech/api/request-new-aid')
 			.then(function (response) {
 				let aid = response.data;
 				history.push({

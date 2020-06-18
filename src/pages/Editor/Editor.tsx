@@ -86,7 +86,7 @@ export default function Editor(props: any) {
 			let obj: New = history.location.state;
 			obj.new === true &&
 				axios.post(
-					`http://localhost:8080/api/new-article/${aid}`,
+					`https://arendelle.tech/api/new-article/${aid}`,
 					{},
 					{
 						headers: {
@@ -96,7 +96,7 @@ export default function Editor(props: any) {
 				);
 		} else {
 			axios
-				.get(`http://localhost:8080/api/get-article/${aid}`, {
+				.get(`https://arendelle.tech/api/get-article/${aid}`, {
 					headers: {
 						Authorization: `Bearer ${localStorage.getItem('token')}`,
 					},
@@ -121,7 +121,7 @@ export default function Editor(props: any) {
 	const saveAll = () => {
 		axios
 			.post(
-				`http://localhost:8080/api/save/${aid}`,
+				`https://arendelle.tech/api/save/${aid}`,
 				{},
 				{
 					headers: {

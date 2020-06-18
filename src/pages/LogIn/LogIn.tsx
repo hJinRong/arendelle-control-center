@@ -25,7 +25,7 @@ export default function LogIn() {
 		e.target.blur();
 		axios
 			.post(
-				'http://localhost:8080/api/auth',
+				'https://arendelle.tech/api/auth',
 				{},
 				{
 					params: {
@@ -46,7 +46,7 @@ export default function LogIn() {
 			<div className={`login-con`}>
 				<div className={`greeting`}></div>
 				<div className={`login-form`}>
-					<form action="http://localhost:8080/auth" method="post">
+					<form action="https://arendelle.tech/auth" method="post">
 						<input
 							type="text"
 							name="account"
