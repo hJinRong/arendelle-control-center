@@ -26,12 +26,7 @@ export default function ControlPanel() {
 	useEffect(() => {
 		if (articles === tmp) {
 			axios
-				.get('https://arendelle.tech/api/my-articles', {
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem('token')}`,
-						Accept: 'application/json',
-					},
-				})
+				.get('https://arendelle.tech/api/my-articles')
 				.then(function (response) {
 					setArticles(response.data);
 				})

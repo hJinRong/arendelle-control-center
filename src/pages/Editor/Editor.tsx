@@ -10,6 +10,8 @@ import Download from './download.svg';
 import Home from './home.svg';
 import keyboardJS from 'keyboardjs';
 import { message } from 'antd';
+import hljs from 'highlight.js';
+import './androidstudio.css';
 
 const iconCon = css`
 	position: absolute;
@@ -43,6 +45,7 @@ const half = css`
 	width: 50%;
 	float: left;
 	padding: 60px 50px 0;
+	overflow-y: scroll;
 `;
 
 interface New {
@@ -59,7 +62,7 @@ export default function Editor(props: any) {
 	const [content, setContent] = useState('');
 
 	useEffect(() => {
-		keyboardJS.bind('tab', (e) => {
+		keyboardJS.bind('ctrl+y', (e) => {
 			if (editablePart.current) {
 				editablePart.current.focus();
 				let startPos = editablePart.current.selectionStart;
@@ -70,7 +73,8 @@ export default function Editor(props: any) {
 				);
 				editablePart.current.value = front + '\t' + back;
 				editablePart.current.focus();
-				editablePart.current.selectionStart = editablePart.current.value.length;
+				editablePart.current.selectionStart = (front + '\t').length;
+				editablePart.current.selectionEnd = editablePart.current.selectionStart;
 			}
 		});
 	}, []);
@@ -96,11 +100,7 @@ export default function Editor(props: any) {
 				);
 		} else {
 			axios
-				.get(`https://arendelle.tech/api/get-article/${aid}`, {
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem('token')}`,
-					},
-				})
+				.get(`https://arendelle.tech/api/get-article/${aid}`)
 				.then(function (response) {
 					const data = response.data;
 					setTitle(data?.title);
@@ -117,6 +117,12 @@ export default function Editor(props: any) {
 			showPart.current.innerHTML = marked(content);
 		}
 	}, [content]);
+
+	useEffect(() => {
+		document
+			.querySelectorAll<HTMLElement>('pre code')
+			.forEach((block) => hljs.highlightBlock(block));
+	});
 
 	const saveAll = () => {
 		axios
@@ -225,6 +231,7 @@ export default function Editor(props: any) {
 					css={css`
 						${half}
 						border-left: dotted 1px gray;
+						word-break: break-all;
 					`}
 					ref={showPart}
 				></div>
