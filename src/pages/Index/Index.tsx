@@ -42,7 +42,7 @@ const InputableSymbol = () => (
 			user-select: none;
 		`}
 	>
-		>
+		{'>'}
 	</span>
 );
 
