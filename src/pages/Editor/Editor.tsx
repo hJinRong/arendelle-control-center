@@ -8,6 +8,7 @@ import './Editor.css';
 import Save from './save.svg';
 import Download from './download.svg';
 import Home from './home.svg';
+import Upload from './upload.svg';
 import keyboardJS from 'keyboardjs';
 import { message } from 'antd';
 import hljs from 'highlight.js';
@@ -197,7 +198,7 @@ export default function Editor(props: any) {
 			};
 
 			axios
-				.post('http://localhost:8080/api/upload-figure', data, config)
+				.post('https://arendelle.tech/api/upload-figure', data, config)
 				.then((response) => {
 					message.success('图片上传成功');
 					const node = document.getElementById('tmpInput') as HTMLInputElement;
@@ -205,7 +206,7 @@ export default function Editor(props: any) {
 						document.body.removeChild<HTMLInputElement>(node);
 					}
 					insertContent(
-						`![figure](http://localhost:8080/api/get-figure/${response.data})\n`
+						`![figure](https://arendelle.tech/api/get-figure/${response.data})\n`
 					);
 				})
 				.catch((error) => {
@@ -262,7 +263,7 @@ export default function Editor(props: any) {
 						alt="home"
 						onClick={() => history.push('/control-panel')}
 					/>
-					<img src={Save} alt="upload-figure" onClick={uploadFigure} />
+					<img src={Upload} alt="upload-figure" onClick={uploadFigure} />
 				</div>
 				<textarea
 					ref={editablePart}
