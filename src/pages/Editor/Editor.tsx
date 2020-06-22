@@ -61,21 +61,25 @@ export default function Editor(props: any) {
 	const [title, setTitle] = useState('');
 	const [content, setContent] = useState('');
 
+	const insertContent = (content: string) => {
+		if (editablePart.current) {
+			editablePart.current.focus();
+			let startPos = editablePart.current.selectionStart;
+			const front = editablePart.current.value.substring(0, startPos);
+			const back = editablePart.current.value.substring(
+				startPos,
+				editablePart.current.value.length
+			);
+			editablePart.current.value = front + content + back;
+			editablePart.current.focus();
+			editablePart.current.selectionStart = (front + content).length;
+			editablePart.current.selectionEnd = editablePart.current.selectionStart;
+		}
+	};
+
 	useEffect(() => {
 		keyboardJS.bind('ctrl+y', (e) => {
-			if (editablePart.current) {
-				editablePart.current.focus();
-				let startPos = editablePart.current.selectionStart;
-				const front = editablePart.current.value.substring(0, startPos);
-				const back = editablePart.current.value.substring(
-					startPos,
-					editablePart.current.value.length
-				);
-				editablePart.current.value = front + '\t' + back;
-				editablePart.current.focus();
-				editablePart.current.selectionStart = (front + '\t').length;
-				editablePart.current.selectionEnd = editablePart.current.selectionStart;
-			}
+			insertContent('\t');
 		});
 	}, []);
 
@@ -101,12 +105,12 @@ export default function Editor(props: any) {
 		} else {
 			axios
 				.get(`https://arendelle.tech/api/get-article/${aid}`)
-				.then(function (response) {
+				.then((response) => {
 					const data = response.data;
 					setTitle(data?.title);
 					setContent(data?.content);
 				})
-				.catch(function (error) {
+				.catch((error) => {
 					throw error;
 				});
 		}
@@ -140,7 +144,7 @@ export default function Editor(props: any) {
 					},
 				}
 			)
-			.then(function (response) {
+			.then((response) => {
 				if (response.data === 'DONE') {
 					setBlocking(false);
 					message.success('Saved');
@@ -148,7 +152,7 @@ export default function Editor(props: any) {
 					message.error('Error occurred');
 				}
 			})
-			.catch(function (error) {
+			.catch((error) => {
 				throw error;
 			});
 	};
@@ -157,9 +161,9 @@ export default function Editor(props: any) {
 		let element = document.createElement('a');
 		element.setAttribute(
 			'href',
-			'data:text/plain;charset=utf-8,' + encodeURIComponent(content)
+			'data:text/markdown;charset=utf-8,' + encodeURIComponent(content)
 		);
-		element.setAttribute('download', filename);
+		element.setAttribute('download', `${filename}.md`);
 		element.style.display = 'none';
 		document.body.appendChild(element);
 		element.click();
@@ -168,6 +172,51 @@ export default function Editor(props: any) {
 
 	const downloadToLocal = () => {
 		download(title, content);
+	};
+
+	const uploadFigure = () => {
+		const input = document.createElement('input');
+		input.setAttribute('id', 'tmpInput');
+		input.setAttribute('type', 'file');
+		input.setAttribute('style', 'visibility:hidden');
+		document.body.appendChild(input);
+		input.onchange = uploadFigure2;
+		input.click();
+	};
+
+	const uploadFigure2 = (e: Event) => {
+		const input = e.target as HTMLInputElement;
+		if (input.files) {
+			let data = new FormData();
+			data.append('figure', input.files[0]);
+
+			const config = {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+				},
+			};
+
+			axios
+				.post('http://localhost:8080/api/upload-figure', data, config)
+				.then((response) => {
+					message.success('图片上传成功');
+					const node = document.getElementById('tmpInput') as HTMLInputElement;
+					if (node) {
+						document.body.removeChild<HTMLInputElement>(node);
+					}
+					insertContent(
+						`![figure](http://localhost:8080/api/get-figure/${response.data})\n`
+					);
+				})
+				.catch((error) => {
+					message.error('图片上传失败');
+					const node = document.getElementById('tmpInput') as HTMLInputElement;
+					if (node) {
+						document.body.removeChild<HTMLInputElement>(node);
+					}
+					throw error;
+				});
+		}
 	};
 
 	return (
@@ -213,6 +262,7 @@ export default function Editor(props: any) {
 						alt="home"
 						onClick={() => history.push('/control-panel')}
 					/>
+					<img src={Save} alt="upload-figure" onClick={uploadFigure} />
 				</div>
 				<textarea
 					ref={editablePart}
@@ -228,6 +278,7 @@ export default function Editor(props: any) {
 					value={content}
 				></textarea>
 				<div
+					className="showPart"
 					css={css`
 						${half}
 						border-left: dotted 1px gray;
