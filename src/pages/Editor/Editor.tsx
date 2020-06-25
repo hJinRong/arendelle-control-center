@@ -131,20 +131,15 @@ export default function Editor(props: any) {
 
 	const saveAll = () => {
 		axios
-			.post(
-				`https://arendelle.tech/api/save/${aid}`,
-				{},
-				{
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem('token')}`,
-					},
-					params: {
-						aid: aid,
-						title: title,
-						content: content,
-					},
-				}
-			)
+			.post(`https://arendelle.tech/api/save/${aid}`, content, {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				},
+				params: {
+					aid: aid,
+					title: title,
+				},
+			})
 			.then((response) => {
 				if (response.data === 'DONE') {
 					setBlocking(false);
@@ -154,6 +149,7 @@ export default function Editor(props: any) {
 				}
 			})
 			.catch((error) => {
+				message.error('Error occurred');
 				throw error;
 			});
 	};
