@@ -7,7 +7,6 @@ export default function Nav() {
 	const navItemList: Array<NavItemInfo> = [
 		{ title: 'Log In', target: '/login' },
 		{ title: 'Control panel', target: '/control-panel' },
-		{ title: 'Editor', target: '/editor' },
 	];
 
 	return (
