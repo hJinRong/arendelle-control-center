@@ -8,8 +8,7 @@ import SignOut from './sign-out.svg';
 import { useHistory } from 'react-router-dom';
 
 export default function ControlPanel() {
-	const tmp: ArticleInfo[] = [];
-	const [articles, setArticles] = useState(tmp);
+	const [articles, setArticles] = useState<ArticleInfo[]>();
 
 	const history = useHistory();
 
@@ -24,16 +23,14 @@ export default function ControlPanel() {
 	});
 
 	useEffect(() => {
-		if (articles === tmp) {
-			axios
-				.get('https://arendelle.tech/api/my-articles')
-				.then(function (response) {
-					setArticles(response.data);
-				})
-				.catch(function (error) {
-					throw error;
-				});
-		}
+		axios
+			.get('https://arendelle.tech/api/my-articles')
+			.then(function (response) {
+				setArticles(response.data);
+			})
+			.catch(function (error) {
+				throw error;
+			});
 	});
 
 	const newArticle = () => {
@@ -59,12 +56,12 @@ export default function ControlPanel() {
 	};
 
 	const removeArticle = (aid: string) => {
-		setArticles(articles.filter((item) => item.aid !== aid));
+		setArticles(articles?.filter((item) => item.aid !== aid));
 	};
 
 	return (
 		<>
-			{articles.map((i) => (
+			{articles?.map((i) => (
 				<Article
 					key={i.aid.toString()}
 					{...i}

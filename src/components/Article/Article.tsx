@@ -60,7 +60,15 @@ export default function Article(props: ArticleInfo & ExternalControl) {
 
 	return (
 		<div className="article-con">
-			<img className="figure" src={Tea} alt="figure"></img>
+			<img
+				className="figure"
+				src={
+					props.figure
+						? `https://arendelle.tech/api/get-figure/${props.figure}`
+						: Tea
+				}
+				alt="figure"
+			></img>
 			<div className="info">
 				<Link className="title" to={`/editor/${props.aid}`}>
 					{props.title}

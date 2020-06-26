@@ -3,4 +3,5 @@ export default interface ArticleInfo {
 	title: string;
 	date: string;
 	vi: boolean;
+	figure: string;
 }

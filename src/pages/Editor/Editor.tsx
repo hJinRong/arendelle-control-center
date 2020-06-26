@@ -9,6 +9,7 @@ import Save from './save.svg';
 import Download from './download.svg';
 import Home from './home.svg';
 import Upload from './upload.svg';
+import Theme from './theme.svg';
 import keyboardJS from 'keyboardjs';
 import { message } from 'antd';
 import hljs from 'highlight.js';
@@ -216,6 +217,47 @@ export default function Editor(props: any) {
 		}
 	};
 
+	const uploadThemePicture = () => {
+		const input = document.createElement('input');
+		input.setAttribute('id', 'tmpInput');
+		input.setAttribute('type', 'file');
+		input.setAttribute('style', 'visibility:hidden');
+		document.body.appendChild(input);
+		input.onchange = uploadThemePicture2;
+		input.click();
+	};
+
+	const uploadThemePicture2 = (e: Event) => {
+		const input = e.target as HTMLInputElement;
+		if (input.files) {
+			let data = new FormData();
+			data.append('figure', input.files[0]);
+
+			const config = {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+				},
+				params: {
+					aid: aid,
+				},
+			};
+
+			axios
+				.post('https://arendelle.tech/api/theme-picture', data, config)
+				.then((response) => {
+					message.success('图片上传成功');
+				})
+				.catch((error) => {
+					message.error('图片上传失败');
+					const node = document.getElementById('tmpInput') as HTMLInputElement;
+					if (node) {
+						document.body.removeChild<HTMLInputElement>(node);
+					}
+					throw error;
+				});
+		}
+	};
+
 	return (
 		<div>
 			<input
@@ -260,6 +302,7 @@ export default function Editor(props: any) {
 						onClick={() => history.push('/control-panel')}
 					/>
 					<img src={Upload} alt="upload-figure" onClick={uploadFigure} />
+					<img src={Theme} alt="theme" onClick={uploadThemePicture} />
 				</div>
 				<textarea
 					ref={editablePart}
