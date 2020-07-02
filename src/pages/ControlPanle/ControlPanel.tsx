@@ -25,18 +25,18 @@ export default function ControlPanel() {
 	useEffect(() => {
 		axios
 			.get('https://arendelle.tech/api/my-articles')
-			.then(function (response) {
+			.then((response) => {
 				setArticles(response.data);
 			})
-			.catch(function (error) {
+			.catch((error) => {
 				throw error;
 			});
-	});
+	}, []);
 
 	const newArticle = () => {
 		axios
 			.get('https://arendelle.tech/api/request-new-aid')
-			.then(function (response) {
+			.then((response) => {
 				let aid = response.data;
 				history.push({
 					pathname: `/editor/${aid}`,
@@ -45,7 +45,7 @@ export default function ControlPanel() {
 					},
 				});
 			})
-			.catch(function (error) {
+			.catch((error) => {
 				throw error;
 			});
 	};
