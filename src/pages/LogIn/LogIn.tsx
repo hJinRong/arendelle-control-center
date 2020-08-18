@@ -64,12 +64,14 @@ export default function LogIn() {
 							type="text"
 							name="account"
 							placeholder="Account"
+							autoComplete="on"
 							onChange={(e) => setAccount(e.target.value)}
 						/>
 						<input
 							type="password"
 							name="password"
 							placeholder="Password"
+							autoComplete="current-password"
 							onChange={(e) => setPassword(e.target.value)}
 						/>
 						<button
