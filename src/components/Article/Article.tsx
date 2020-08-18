@@ -8,7 +8,7 @@ import Delete from './delete.svg';
 import { useHistory, Link } from 'react-router-dom';
 import ArticleInfo from './ArticleInfo';
 import axios from 'axios';
-import { message } from 'antd';
+import { message, Popconfirm } from 'antd';
 import ExternalControl from './ExternalControl';
 
 export default function Article(props: ArticleInfo & ExternalControl) {
@@ -26,12 +26,12 @@ export default function Article(props: ArticleInfo & ExternalControl) {
 					Accept: 'plain/text',
 				},
 			})
-			.then(function (response) {
+			.then((response) => {
 				if (response.data === 'DONE') {
 					setVisibility(!visibility);
 				}
 			})
-			.catch(function (error) {
+			.catch((error) => {
 				throw error;
 			});
 	};
@@ -45,7 +45,7 @@ export default function Article(props: ArticleInfo & ExternalControl) {
 					Authorization: `Bearer ${localStorage.getItem('token')}`,
 				},
 			})
-			.then(function (response) {
+			.then((response) => {
 				if (response.data === 'DONE') {
 					message.success('Deleted');
 					props.removeArticleItem(props.aid);
@@ -53,7 +53,7 @@ export default function Article(props: ArticleInfo & ExternalControl) {
 					message.error('Error occurred');
 				}
 			})
-			.catch(function (error) {
+			.catch((error) => {
 				throw error;
 			});
 	};
@@ -85,9 +85,17 @@ export default function Article(props: ArticleInfo & ExternalControl) {
 					<div className="icon">
 						<img src={Modify} alt="modify" onClick={modify} />
 					</div>
-					<div className="icon">
-						<img src={Delete} alt="delete" onClick={deleteArticle} />
-					</div>
+					<Popconfirm
+						title="Are you sure to delete the article?"
+						okText="Sure"
+						cancelText="Cancel"
+						placement="right"
+						onConfirm={deleteArticle}
+					>
+						<div className="icon">
+							<img src={Delete} alt="delete" />
+						</div>
+					</Popconfirm>
 				</div>
 			</div>
 		</div>
