@@ -52,7 +52,6 @@ export default function ControlPanel() {
 
 	const signOut = () => {
 		localStorage.removeItem('token');
-		history.push('/login');
 	};
 
 	const removeArticle = (aid: string) => {
@@ -69,11 +68,11 @@ export default function ControlPanel() {
 				/>
 			))}
 			<div className="ctr-btn">
-				<div className="signout" onClick={signOut}>
+				<div className="signout" title="Sign out" onClick={signOut}>
 					<img src={SignOut} alt="Sign out" />
 				</div>
-				<div className="new" onClick={newArticle}>
-					<img src={Pen} alt="new" />
+				<div className="new" title="New article" onClick={newArticle}>
+					<img src={Pen} alt="New article" />
 				</div>
 			</div>
 		</>
