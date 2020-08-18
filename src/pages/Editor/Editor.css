@@ -1,3 +1,50 @@
+.titleField {
+	width: 100%;
+	height: 45px;
+	border: solid 1px black;
+	padding: 0 0.3em;
+	font-size: 28px;
+	position: absolute;
+	z-index: 100;
+}
+
+.iconCon {
+	position: absolute;
+	bottom: 1em;
+	right: 1em;
+	z-index: 99;
+}
+
+.iconCon > img {
+	float: left;
+	margin: 0.2em;
+	display: block;
+	cursor: pointer;
+	background: white;
+}
+
+.iconCon > img:hover {
+	border: dotted 1px gray;
+}
+
+.editorCon {
+	position: absolute;
+	display: block;
+	width: 100%;
+	height: 100%;
+	float: left;
+}
+
+.half {
+	display: block;
+	position: relative;
+	height: 100%;
+	width: 50%;
+	float: left;
+	padding: 60px 50px 0;
+	overflow-y: scroll;
+}
+
 .showPart img {
 	width: 100%;
 }

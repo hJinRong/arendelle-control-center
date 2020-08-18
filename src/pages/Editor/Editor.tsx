@@ -15,41 +15,6 @@ import { message } from 'antd';
 import hljs from 'highlight.js';
 import './androidstudio.css';
 
-const iconCon = css`
-	position: absolute;
-	bottom: 1em;
-	right: 1em;
-	z-index: 99;
-	& > img {
-		float: left;
-		margin: 0.2em;
-		display: block;
-		cursor: pointer;
-		background: white;
-	}
-	& > img:hover {
-		border: dotted 1px gray;
-	}
-`;
-
-const editorCon = css`
-	position: absolute;
-	display: block;
-	width: 100%;
-	height: 100%;
-	float: left;
-`;
-
-const half = css`
-	display: block;
-	position: relative;
-	height: 100%;
-	width: 50%;
-	float: left;
-	padding: 60px 50px 0;
-	overflow-y: scroll;
-`;
-
 interface New {
 	new?: boolean;
 }
@@ -60,8 +25,8 @@ export default function Editor(props: any) {
 	const history = useHistory();
 	const { aid } = useParams();
 	const [blocking, setBlocking] = useState(false);
-	const [title, setTitle] = useState('');
-	const [content, setContent] = useState('');
+	const [title, setTitle] = useState<string | undefined>();
+	const [content, setContent] = useState<string | undefined>();
 
 	const insertContent = (content: string) => {
 		if (editablePart.current) {
@@ -86,7 +51,7 @@ export default function Editor(props: any) {
 	}, []);
 
 	useEffect(() => {
-		document.title = title;
+		document.title = title ?? 'Untitled';
 	});
 
 	useEffect(() => {
@@ -119,7 +84,7 @@ export default function Editor(props: any) {
 	}, [aid, history]);
 
 	useEffect(() => {
-		if (showPart.current) {
+		if (showPart.current && content !== undefined) {
 			showPart.current.innerHTML = marked(content);
 		}
 	}, [content]);
@@ -169,7 +134,7 @@ export default function Editor(props: any) {
 	};
 
 	const downloadToLocal = () => {
-		download(title, content);
+		download(title ?? 'Untitled', content ?? '');
 	};
 
 	const uploadFigure = () => {
@@ -263,20 +228,12 @@ export default function Editor(props: any) {
 			<input
 				type="text"
 				name="title"
-				value={title}
+				value={title ?? 'Untitled'}
 				onChange={(e) => {
 					setBlocking(true);
 					setTitle(e.target.value);
 				}}
-				css={css`
-					width: 100%;
-					height: 45px;
-					border: solid 1px black;
-					padding: 0 0.3em;
-					font-size: 28px;
-					position: absolute;
-					z-index: 100;
-				`}
+				className="titleField"
 			/>
 			<Prompt
 				when={blocking}
@@ -284,16 +241,8 @@ export default function Editor(props: any) {
 					`内容发生改变，是否不保存，立刻前往<${location.pathname}>?`
 				}
 			/>
-			<div
-				css={css`
-					${editorCon}
-				`}
-			>
-				<div
-					css={css`
-						${iconCon}
-					`}
-				>
+			<div className="editorCon">
+				<div className="iconCon">
 					<img src={Save} alt="save" onClick={saveAll} />
 					<img src={Download} alt="download" onClick={downloadToLocal} />
 					<img
@@ -306,8 +255,8 @@ export default function Editor(props: any) {
 				</div>
 				<textarea
 					ref={editablePart}
+					className="half"
 					css={css`
-						${half}
 						resize: none;
 						font-size: larger;
 					`}
@@ -315,12 +264,11 @@ export default function Editor(props: any) {
 						setBlocking(true);
 						setContent(e.target.value);
 					}}
-					value={content}
+					value={content ?? ''}
 				></textarea>
 				<div
-					className="showPart"
+					className="showPart half"
 					css={css`
-						${half}
 						border-left: dotted 1px gray;
 						word-break: break-all;
 					`}
