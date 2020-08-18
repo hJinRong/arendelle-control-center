@@ -56,3 +56,7 @@ button {
 	background-position: 110% -188%;
 	font-weight: 600;
 }
+
+button:disabled {
+	cursor: not-allowed;
+}

@@ -2,16 +2,29 @@
 import { jsx } from '@emotion/core';
 import './LogIn.css';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
 export default function LogIn() {
 	const history = useHistory();
-	const [account, setAccount] = useState('');
-	const [password, setPassword] = useState('');
+	const [account, setAccount] = useState<string | null>(null);
+	const [password, setPassword] = useState<string | null>(null);
+	const disabled = useMemo(() => {
+		if (
+			account === null ||
+			password === null ||
+			account.trim().length === 0 ||
+			account.indexOf(' ') !== -1 ||
+			password.trim().length === 0 ||
+			password.indexOf(' ') !== -1
+		) {
+			return true;
+		}
+		return false;
+	}, [account, password]);
 
 	useEffect(() => {
-		document.title = 'Log in';
+		document.title = 'Log In';
 	});
 
 	useEffect(() => {
@@ -29,12 +42,12 @@ export default function LogIn() {
 				{},
 				{
 					params: {
-						account: account.trim(),
-						password: password.trim(),
+						account: account,
+						password: password,
 					},
 				}
 			)
-			.then(function (response) {
+			.then((response) => {
 				let token = response.data.token;
 				localStorage.setItem('token', token);
 				history.replace('/control-panel');
@@ -59,7 +72,16 @@ export default function LogIn() {
 							placeholder="Password"
 							onChange={(e) => setPassword(e.target.value)}
 						/>
-						<button type="submit" onClick={(e) => login(e)}>
+						<button
+							title={
+								disabled
+									? 'Blank option or contains invalid characters '
+									: 'Okay'
+							}
+							disabled={disabled}
+							type="submit"
+							onClick={(e) => login(e)}
+						>
 							Log in
 						</button>
 					</form>
