@@ -56,7 +56,7 @@ export default function Editor(props: any) {
 
 	useEffect(() => {
 		if (localStorage.getItem('token') === null) {
-			history.push('/login');
+			history.replace('/login');
 		} else if (history.location.state) {
 			let obj: New = history.location.state;
 			obj.new === true &&

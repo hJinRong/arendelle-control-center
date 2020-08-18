@@ -52,6 +52,7 @@ export default function ControlPanel() {
 
 	const signOut = () => {
 		localStorage.removeItem('token');
+		history.replace('/login');
 	};
 
 	const removeArticle = (aid: string) => {
