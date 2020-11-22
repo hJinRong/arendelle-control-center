@@ -45,6 +45,11 @@
 	overflow-y: scroll;
 }
 
+.half .editorPart {
+	resize: none;
+	font-size: larger;
+}
+
 .showPart img {
 	width: 100%;
 }

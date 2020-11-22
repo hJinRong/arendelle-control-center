@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx, css } from '@emotion/core';
 import marked from 'marked';
 import { useRef, useEffect, useState } from 'react';
 import { useHistory, useParams, Prompt } from 'react-router-dom';
@@ -14,6 +12,7 @@ import keyboardJS from 'keyboardjs';
 import { message } from 'antd';
 import hljs from 'highlight.js';
 import './androidstudio.css';
+import React from 'react';
 
 interface New {
 	new?: boolean;
@@ -255,7 +254,7 @@ export default function Editor(props: any) {
 				</div>
 				<textarea
 					ref={editablePart}
-					className="half"
+					className="half editorPart"
 					css={css`
 						resize: none;
 						font-size: larger;

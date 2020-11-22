@@ -1,9 +1,8 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import './LogIn.css';
 import axios from 'axios';
 import { useState, useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
+import React from 'react';
 
 export default function LogIn() {
 	const history = useHistory();
@@ -55,7 +54,6 @@ export default function LogIn() {
 	};
 
 	return (
-		<div css={{ position: 'relative', height: '100%' }}>
 			<div className={`login-con`}>
 				<div className={`greeting`}></div>
 				<div className={`login-form`}>
@@ -89,6 +87,5 @@ export default function LogIn() {
 					</form>
 				</div>
 			</div>
-		</div>
 	);
 }
