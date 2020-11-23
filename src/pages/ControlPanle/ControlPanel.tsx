@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Article from '../../components/Article/Article';
 import './ControlPanel.css';
 import axios from 'axios';
-import ArticleInfo from '../../components/Article/ArticleInfo';
 import Pen from './pen.svg';
 import SignOut from './sign-out.svg';
 import { useHistory } from 'react-router-dom';
+import { ArticleInfo } from '../../components/Article/ArticleProps';
 
 export default function ControlPanel() {
 	const [articles, setArticles] = useState<ArticleInfo[]>();
@@ -13,7 +13,7 @@ export default function ControlPanel() {
 	const history = useHistory();
 
 	useEffect(() => {
-		if (localStorage.getItem('token') === null) {
+		if (!localStorage.getItem('token')) {
 			history.push('/login');
 		}
 	});
