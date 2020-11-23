@@ -45,9 +45,14 @@
 	overflow-y: scroll;
 }
 
-.half .editorPart {
+.half.editorPart {
 	resize: none;
 	font-size: larger;
+}
+
+.half.showPart {
+	border-left: dotted 1px gray;
+	word-break: break-all;
 }
 
 .showPart img {

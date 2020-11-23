@@ -13,7 +13,7 @@ export default function LogIn() {
 			account.trim().length === 0 ||
 			account.includes(' ') ||
 			password.trim().length === 0 ||
-			!password.includes(' ')
+			password.includes(' ')
 		) {
 			return true;
 		}
@@ -25,7 +25,7 @@ export default function LogIn() {
 	});
 
 	useEffect(() => {
-		if (!localStorage.getItem('token')) {
+		if (localStorage.getItem('token')) {
 			history.push('/control-panel');
 		}
 	});
@@ -43,7 +43,7 @@ export default function LogIn() {
 					},
 				}
 			)
-			.then((response) => {
+			.then((response: { data: { token: string } }) => {
 				let token = response.data.token;
 				localStorage.setItem('token', token);
 				history.replace('/control-panel');

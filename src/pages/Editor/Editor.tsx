@@ -22,10 +22,10 @@ export default function Editor(props: any) {
 	const editablePart = useRef<HTMLTextAreaElement>(null);
 	const showPart = useRef<HTMLDivElement>(null);
 	const history = useHistory();
-	const { aid } = useParams();
+	const { aid } = useParams<{ aid: string }>();
 	const [blocking, setBlocking] = useState(false);
-	const [title, setTitle] = useState<string | undefined>();
-	const [content, setContent] = useState<string | undefined>();
+	const [title, setTitle] = useState<string>();
+	const [content, setContent] = useState<string>();
 
 	const insertContent = (content: string) => {
 		if (editablePart.current) {
@@ -44,7 +44,7 @@ export default function Editor(props: any) {
 	};
 
 	useEffect(() => {
-		keyboardJS.bind('ctrl+y', (e) => {
+		keyboardJS.bind('ctrl+y', () => {
 			insertContent('\t');
 		});
 	}, []);
@@ -54,7 +54,7 @@ export default function Editor(props: any) {
 	});
 
 	useEffect(() => {
-		if (localStorage.getItem('token') === null) {
+		if (!localStorage.getItem('token')) {
 			history.replace('/login');
 		} else if (history.location.state) {
 			let obj: New = history.location.state;
@@ -71,10 +71,10 @@ export default function Editor(props: any) {
 		} else {
 			axios
 				.get(`https://arendelle.tech/api/get-article/${aid}`)
-				.then((response) => {
+				.then((response: { data: { title: string; content: string } }) => {
 					const data = response.data;
-					setTitle(data?.title);
-					setContent(data?.content);
+					setTitle(data.title);
+					setContent(data.content);
 				})
 				.catch((error) => {
 					throw error;
@@ -83,7 +83,7 @@ export default function Editor(props: any) {
 	}, [aid, history]);
 
 	useEffect(() => {
-		if (showPart.current && content !== undefined) {
+		if (showPart.current && typeof content !== 'undefined') {
 			showPart.current.innerHTML = marked(content);
 		}
 	}, [content]);
@@ -119,20 +119,19 @@ export default function Editor(props: any) {
 			});
 	};
 
-	const download = (filename: string, content: string) => {
-		let element = document.createElement('a');
-		element.setAttribute(
-			'href',
-			'data:text/markdown;charset=utf-8,' + encodeURIComponent(content)
-		);
-		element.setAttribute('download', `${filename}.md`);
-		element.style.display = 'none';
-		document.body.appendChild(element);
-		element.click();
-		document.body.removeChild(element);
-	};
-
 	const downloadToLocal = () => {
+		const download = (filename: string, content: string) => {
+			let element = document.createElement('a');
+			element.setAttribute(
+				'href',
+				'data:text/markdown;charset=utf-8,' + encodeURIComponent(content)
+			);
+			element.setAttribute('download', `${filename}.md`);
+			element.style.display = 'none';
+			document.body.appendChild(element);
+			element.click();
+			document.body.removeChild(element);
+		};
 		download(title ?? 'Untitled', content ?? '');
 	};
 
@@ -142,43 +141,41 @@ export default function Editor(props: any) {
 		input.setAttribute('type', 'file');
 		input.setAttribute('style', 'visibility:hidden');
 		document.body.appendChild(input);
-		input.onchange = uploadFigure2;
+		input.onchange = (e: Event) => {
+			const input = e.target as HTMLInputElement;
+			if (input.files) {
+				let data = new FormData();
+				data.append('figure', input.files[0]);
+
+				const config = {
+					headers: {
+						'Content-Type': 'multipart/form-data',
+					},
+				};
+
+				axios
+					.post('https://arendelle.tech/api/upload-figure', data, config)
+					.then((response) => {
+						message.success('图片上传成功');
+						insertContent(
+							`![figure](https://arendelle.tech/api/get-figure/${response.data})\n`
+						);
+					})
+					.catch((error) => {
+						message.error('图片上传失败');
+						throw error;
+					})
+					.finally(() => {
+						const node = document.getElementById(
+							'tmpInput'
+						) as HTMLInputElement;
+						if (node) {
+							document.body.removeChild<HTMLInputElement>(node);
+						}
+					});
+			}
+		};
 		input.click();
-	};
-
-	const uploadFigure2 = (e: Event) => {
-		const input = e.target as HTMLInputElement;
-		if (input.files) {
-			let data = new FormData();
-			data.append('figure', input.files[0]);
-
-			const config = {
-				headers: {
-					'Content-Type': 'multipart/form-data',
-				},
-			};
-
-			axios
-				.post('https://arendelle.tech/api/upload-figure', data, config)
-				.then((response) => {
-					message.success('图片上传成功');
-					const node = document.getElementById('tmpInput') as HTMLInputElement;
-					if (node) {
-						document.body.removeChild<HTMLInputElement>(node);
-					}
-					insertContent(
-						`![figure](https://arendelle.tech/api/get-figure/${response.data})\n`
-					);
-				})
-				.catch((error) => {
-					message.error('图片上传失败');
-					const node = document.getElementById('tmpInput') as HTMLInputElement;
-					if (node) {
-						document.body.removeChild<HTMLInputElement>(node);
-					}
-					throw error;
-				});
-		}
 	};
 
 	const uploadThemePicture = () => {
@@ -187,39 +184,41 @@ export default function Editor(props: any) {
 		input.setAttribute('type', 'file');
 		input.setAttribute('style', 'visibility:hidden');
 		document.body.appendChild(input);
-		input.onchange = uploadThemePicture2;
+		input.onchange = (e: Event) => {
+			const input = e.target as HTMLInputElement;
+			if (input.files) {
+				let data = new FormData();
+				data.append('figure', input.files[0]);
+
+				const config = {
+					headers: {
+						'Content-Type': 'multipart/form-data',
+					},
+					params: {
+						aid: aid,
+					},
+				};
+
+				axios
+					.post('https://arendelle.tech/api/theme-picture', data, config)
+					.then(() => {
+						message.success('图片上传成功');
+					})
+					.catch((error) => {
+						message.error('图片上传失败');
+						throw error;
+					})
+					.finally(() => {
+						const node = document.getElementById(
+							'tmpInput'
+						) as HTMLInputElement;
+						if (node) {
+							document.body.removeChild<HTMLInputElement>(node);
+						}
+					});
+			}
+		};
 		input.click();
-	};
-
-	const uploadThemePicture2 = (e: Event) => {
-		const input = e.target as HTMLInputElement;
-		if (input.files) {
-			let data = new FormData();
-			data.append('figure', input.files[0]);
-
-			const config = {
-				headers: {
-					'Content-Type': 'multipart/form-data',
-				},
-				params: {
-					aid: aid,
-				},
-			};
-
-			axios
-				.post('https://arendelle.tech/api/theme-picture', data, config)
-				.then((response) => {
-					message.success('图片上传成功');
-				})
-				.catch((error) => {
-					message.error('图片上传失败');
-					const node = document.getElementById('tmpInput') as HTMLInputElement;
-					if (node) {
-						document.body.removeChild<HTMLInputElement>(node);
-					}
-					throw error;
-				});
-		}
 	};
 
 	return (
@@ -255,24 +254,13 @@ export default function Editor(props: any) {
 				<textarea
 					ref={editablePart}
 					className="half editorPart"
-					css={css`
-						resize: none;
-						font-size: larger;
-					`}
 					onChange={(e) => {
 						setBlocking(true);
 						setContent(e.target.value);
 					}}
 					value={content ?? ''}
 				></textarea>
-				<div
-					className="showPart half"
-					css={css`
-						border-left: dotted 1px gray;
-						word-break: break-all;
-					`}
-					ref={showPart}
-				></div>
+				<div className="half showPart" ref={showPart}></div>
 			</div>
 		</div>
 	);
