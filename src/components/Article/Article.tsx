@@ -42,6 +42,7 @@ export default function Article(props: ArticleInfo & ExternalControl) {
 			.get(`https://arendelle.tech/api/delete-article/${props.aid}`, {
 				headers: {
 					Authorization: `Bearer ${localStorage.getItem('token')}`,
+					Accept: 'plain/text'
 				},
 			})
 			.then((response) => {
