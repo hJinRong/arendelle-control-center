@@ -6,10 +6,9 @@ import VisibilityOff from './visibility-off.svg';
 import Modify from './modify.svg';
 import Delete from './delete.svg';
 import { useHistory, Link } from 'react-router-dom';
-import ArticleInfo from './ArticleInfo';
 import axios from 'axios';
 import { message, Popconfirm } from 'antd';
-import ExternalControl from './ExternalControl';
+import { ArticleInfo, ExternalControl } from './ArticleProps';
 
 export default function Article(props: ArticleInfo & ExternalControl) {
 	const [visibility, setVisibility] = useState(props.vi);
