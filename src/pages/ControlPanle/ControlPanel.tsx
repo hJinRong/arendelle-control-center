@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import Article from '../../components/Article/Article';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Article } from '../../components/Article/Article';
 import './ControlPanel.css';
 import axios from 'axios';
 import Pen from './pen.svg';
@@ -55,9 +55,12 @@ export default function ControlPanel() {
 		history.replace('/login');
 	};
 
-	const removeArticle = (aid: string) => {
-		setArticles(articles?.filter((item) => item.aid !== aid));
-	};
+	const removeArticleCallback = useCallback(
+		(aid: string) => {
+			setArticles(articles?.filter((item) => item.aid !== aid));
+		},
+		[articles]
+	);
 
 	return (
 		<>
@@ -65,7 +68,7 @@ export default function ControlPanel() {
 				<Article
 					key={i.aid.toString()}
 					{...i}
-					removeArticleItem={removeArticle}
+					removeArticleItem={removeArticleCallback}
 				/>
 			))}
 			<div className="ctr-btn">
