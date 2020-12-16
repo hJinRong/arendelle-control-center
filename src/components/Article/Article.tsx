@@ -1,6 +1,6 @@
 import React from 'react';
 import './Article.css';
-import Tea from './tea.jpg';
+import Tea from './tea.webp';
 import Modify from './modify.svg';
 import { useHistory, Link } from 'react-router-dom';
 import { ArticleInfo, ExternalControl } from './ArticleProps';
