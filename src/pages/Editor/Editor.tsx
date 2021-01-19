@@ -1,17 +1,18 @@
-import marked from 'marked';
-import { useRef, useEffect, useState } from 'react';
-import { useHistory, useParams, Prompt } from 'react-router-dom';
-import axios from 'axios';
-import './Editor.css';
-import Save from './save.svg';
-import Download from './download.svg';
-import Home from './home.svg';
-import Upload from './upload.svg';
-import Theme from './theme.svg';
-import keyboardJS from 'keyboardjs';
 import { message } from 'antd';
+import axios from 'axios';
 import hljs from 'highlight.js';
+import keyboardJS from 'keyboardjs';
+import marked from 'marked';
+import { useEffect, useRef, useState } from 'react';
+import { Prompt, useHistory, useParams } from 'react-router-dom';
+import { upload } from '../../components/FileUpload/FileUpload';
 import './androidstudio.css';
+import Download from './download.svg';
+import './Editor.css';
+import Home from './home.svg';
+import Save from './save.svg';
+import Theme from './theme.svg';
+import Upload from './upload.svg';
 
 interface New {
 	new?: boolean;
@@ -19,6 +20,7 @@ interface New {
 
 export default function Editor() {
 	const editablePart = useRef<HTMLTextAreaElement>(null);
+	const mount = useRef<HTMLDivElement>(null);
 	const showPart = useRef<HTMLDivElement>(null);
 	const history = useHistory();
 	const { aid } = useParams<{ aid: string }>();
@@ -135,88 +137,56 @@ export default function Editor() {
 	};
 
 	const uploadFigure = () => {
-		const input = document.createElement('input');
-		input.setAttribute('id', 'tmpInput');
-		input.setAttribute('type', 'file');
-		input.setAttribute('style', 'visibility:hidden');
-		document.body.appendChild(input);
-		input.onchange = (e: Event) => {
-			const input = e.target as HTMLInputElement;
-			if (input.files) {
-				let data = new FormData();
-				data.append('figure', input.files[0]);
-
-				const config = {
+		const succeed = (resp: any) => {
+			message.success('图片上传成功');
+			insertContent(
+				`![figure](https://arendelle.tech/api/get-figure/${resp.data})\n`
+			);
+		};
+		const failed = (err: any) => {
+			message.error('图片上传失败');
+		};
+		upload(
+			{
+				mount: mount.current,
+				key: 'figure',
+				config: {
 					headers: {
 						'Content-Type': 'multipart/form-data',
 					},
-				};
-
-				axios
-					.post('https://arendelle.tech/api/upload-figure', data, config)
-					.then((response) => {
-						message.success('图片上传成功');
-						insertContent(
-							`![figure](https://arendelle.tech/api/get-figure/${response.data})\n`
-						);
-					})
-					.catch((error) => {
-						message.error('图片上传失败');
-						throw error;
-					})
-					.finally(() => {
-						const node = document.getElementById(
-							'tmpInput'
-						) as HTMLInputElement;
-						if (node) {
-							document.body.removeChild<HTMLInputElement>(node);
-						}
-					});
+				},
+				receiverUrl: 'https://arendelle.tech/api/upload-figure',
+				succeed: succeed,
+				failed: failed,
 			}
-		};
-		input.click();
+		);
 	};
 
 	const uploadThemePicture = () => {
-		const input = document.createElement('input');
-		input.setAttribute('id', 'tmpInput');
-		input.setAttribute('type', 'file');
-		input.setAttribute('style', 'visibility:hidden');
-		document.body.appendChild(input);
-		input.onchange = (e: Event) => {
-			const input = e.target as HTMLInputElement;
-			if (input.files) {
-				let data = new FormData();
-				data.append('figure', input.files[0]);
-
-				const config = {
-					headers: {
-						'Content-Type': 'multipart/form-data',
-					},
-					params: {
-						aid: aid,
-					},
-				};
-
-				axios
-					.post('https://arendelle.tech/api/theme-picture', data, config)
-					.then(() => {
-						message.success('图片上传成功');
-					})
-					.catch((error) => {
-						message.error('图片上传失败');
-						throw error;
-					})
-					.finally(() => {
-						document.body.removeChild(input);
-					});
+		upload({
+			mount: mount.current,
+			key: 'figure',
+			receiverUrl: 'https://arendelle.tech/api/theme-picture',
+			config: {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+				},
+				params: {
+					aid: aid,
+				},
+			},
+			succeed: () => {
+				message.success('图片上传成功');
+			},
+			failed: () => {
+				message.success('图片上传失败');
 			}
-		};
-		input.click();
+		});
 	};
 
 	return (
 		<div>
+			<div ref={mount} hidden></div>
 			<input
 				type="text"
 				name="title"
