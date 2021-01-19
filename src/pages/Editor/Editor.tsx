@@ -12,13 +12,12 @@ import keyboardJS from 'keyboardjs';
 import { message } from 'antd';
 import hljs from 'highlight.js';
 import './androidstudio.css';
-import React from 'react';
 
 interface New {
 	new?: boolean;
 }
 
-export default function Editor(props: any) {
+export default function Editor() {
 	const editablePart = useRef<HTMLTextAreaElement>(null);
 	const showPart = useRef<HTMLDivElement>(null);
 	const history = useHistory();
@@ -57,7 +56,7 @@ export default function Editor(props: any) {
 		if (!localStorage.getItem('token')) {
 			history.replace('/login');
 		} else if (history.location.state) {
-			let obj: New = history.location.state;
+			let obj = history.location.state as New;
 			obj.new === true &&
 				axios.post(
 					`https://arendelle.tech/api/new-article/${aid}`,
@@ -209,12 +208,7 @@ export default function Editor(props: any) {
 						throw error;
 					})
 					.finally(() => {
-						const node = document.getElementById(
-							'tmpInput'
-						) as HTMLInputElement;
-						if (node) {
-							document.body.removeChild<HTMLInputElement>(node);
-						}
+						document.body.removeChild(input);
 					});
 			}
 		};
